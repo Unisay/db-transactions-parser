@@ -1,5 +1,5 @@
-(defproject test-clj "0.1.0-SNAPSHOT"
-	:description "FIXME: write description"
+(defproject csv-transactions "0.1.0-SNAPSHOT"
+	:description "Parse Deutsche Bank transactions in CSV format and aggregates incomes and expenses by month"
 	:url "http://example.com/FIXME"
 	:license {:name "Eclipse Public License"
 	          :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -10,5 +10,5 @@
 	                [org.clojure/clojure-contrib "1.2.0"]
   ]
 	:profiles {:dev {:dependencies [[midje "1.5.0"]]}}
-	:main test-clj.core
+	:main csv-transactions.core
 	:jvm-opts [])

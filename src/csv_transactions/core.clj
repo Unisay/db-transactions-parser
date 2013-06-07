@@ -1,4 +1,4 @@
-(ns test-clj.core
+(ns csv-transactions.core
 	(:require [clojure.java.io :as io]
 	          [clojure-csv.core :as csv]
 	          [clj-time.core :as time]

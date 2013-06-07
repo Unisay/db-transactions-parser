@@ -1,9 +1,9 @@
-(ns test-clj.core-test
+(ns csv-transactions.core-test
 	(:use midje.sweet
-	      test-clj.core
+	      csv-transactions.core
 	      [midje.util :only [testable-privates]]))
 
-(testable-privates test-clj.core
+(testable-privates csv-transactions.core
 	strip-header-footer parse-csv-date parse-number-default parse-csv-rows)
 
 (facts "about formatters"
