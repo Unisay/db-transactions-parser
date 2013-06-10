@@ -1,10 +1,13 @@
 (ns csv-transactions.core
+
 	(:require [clojure.java.io :as io]
 	          [clojure-csv.core :as csv]
 	          [clj-time.core :as time]
 	          [clj-time.format :as format]
 	          [clojure.contrib.math :as math])
+
 	(:use [clojure.string :only [split]])
+
 	(:gen-class ))
 
 (def csv-formatter (format/formatter "MM/dd/yyyy"))
@@ -30,8 +33,8 @@
 (defn- parse-csv-row
 	"Parses text line and returns map of typed values"
 	[row]
-	(let [cells (split row #";")]
-		{:date (parse-csv-date (nth cells 0))
+	(let [cells (split row #";"), dt (parse-csv-date (nth cells 0))]
+		{:month (vector (time/year dt) (time/month dt))
 		 :income (parse-number-default (nth cells 4) 0)
 		 :expense (math/abs (parse-number-default (nth cells 3) 0))}))
 
@@ -40,16 +43,24 @@
 	[rows]
 	(map parse-csv-row rows))
 
+(defn- group-records
+	[f rec1 rec2]
+	(let [income-group (f (get rec1 :income 0) (:income rec2)),
+        expense-group (f (get rec1 :expense 0) (:expense rec2))]
+	  {:income income-group, :expense expense-group}))
+
 (defn- aggregate-by-month
 	"Groups row maps by month, sums up income and expens fields"
 	[records]
-	(map (reduce (fn [])
-		     (group-by (-> :date time/month)) records)))
+	(let [groups (group-by #(get % :month) records)]
+		(for [[month group] groups]
+			(assoc (reduce (partial group-records +) {} group) :month month))))
 
 (defn- print-values
-	""
-	[]
-	())
+	"Outputs all results to console"
+	[records]
+	(doseq [r records]
+		(println (:month r) (:expense r) (:income r))))
 
 (defn -main
 	"Parse Deutsche Bank transactions in CSV format and aggregates incomes and expenses by month"

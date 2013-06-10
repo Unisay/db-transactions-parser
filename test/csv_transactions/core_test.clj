@@ -35,13 +35,12 @@
 (facts "about `parse-csv-rows`"
 	(parse-csv-rows ["03/04/2013;04/05/2013;\"DESC\";-11.80;;EUR",
 	                 "02/26/2013;02/26/2013;\"LOHN/GEHALT\";;5,329.60;EUR"]) =>
-	  [{:date (dt 2013 3 4) :income 0 :expense 11.8}
-		 {:date (dt 2013 2 26) :income 5329.6 :expense 0}])
+	  [{:month [2013 3] :income 0 :expense 11.8}
+		 {:month [2013 2] :income 5329.6 :expense 0}])
 
 (facts "about `aggregate-by-month`"
-	(aggregate-by-month [{ :date (dt 2013 3 4) :income 2 :expense 5 }
-											 { :date (dt 2013 3 5) :income 3 :expense 6 }
-											 { :date (dt 2013 4 4) :income 4 :expense 7 }]) =>
-	{(dt 2013 3) [{:date (dt 2013 3 4) :income 2 :expense 5}
-	              {:date (dt 2013 3 5) :income 3 :expense 6}]
-	 (dt 2013 4) [{:date (dt 2013 4 4) :income 4 :expense 7}]})
+	(aggregate-by-month [ { :month [2013 3] :income 2 :expense 5 }
+											  { :month [2013 3] :income 3 :expense 6 }
+											  { :month [2013 4] :income 4 :expense 7 } ]) =>
+	[ { :month [2013 3] :income 5 :expense 11 }
+	  { :month [2013 4] :income 4 :expense 7  } ])
