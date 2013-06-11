@@ -66,6 +66,7 @@
 (defn- print-values
 	"Outputs all results to console"
 	[records]
+	(println "--------------------------")
 	(println "Month     Expense   Income" )
 	(println "--------------------------")
 	(doseq [r records]
