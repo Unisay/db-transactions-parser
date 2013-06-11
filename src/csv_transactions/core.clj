@@ -33,8 +33,8 @@
 (defn- parse-csv-row
 	"Parses text line and returns map of typed values"
 	[row]
-	(let [cells (split row #";"), dt (parse-csv-date (nth cells 0))]
-		{:month (vector (time/year dt) (time/month dt))
+	(let [cells (split row #";")]
+		{:date (parse-csv-date (nth cells 0))
 		 :income (parse-number-default (nth cells 4) 0)
 		 :expense (math/abs (parse-number-default (nth cells 3) 0))}))
 
@@ -48,10 +48,13 @@
   {:income (f (get rec1 :income 0) (:income rec2)),
 	 :expense (f (get rec1 :expense 0) (:expense rec2))})
 
+(defn- datetime-to-year-month
+  [dt] (time/year-month (time/year dt) (time/month dt)))
+
 (defn- aggregate-by-month
 	"Groups row maps by month, sums up income and expens fields"
 	[records]
-	(for [[month group] (group-by :month records)]
+	(for [[month group] (group-by #(datetime-to-year-month (:date %)) records)]
 		(assoc (reduce (partial group-records +) {} group) :month month)))
 
 (defn- print-values
