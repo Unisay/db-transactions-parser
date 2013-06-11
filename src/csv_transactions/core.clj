@@ -45,9 +45,8 @@
 
 (defn- group-records
 	[f rec1 rec2]
-	(let [income-group (f (get rec1 :income 0) (:income rec2)),
-        expense-group (f (get rec1 :expense 0) (:expense rec2))]
-	  {:income income-group, :expense expense-group}))
+  {:income (f (get rec1 :income 0) (:income rec2)),
+	 :expense (f (get rec1 :expense 0) (:expense rec2))})
 
 (defn- aggregate-by-month
 	"Groups row maps by month, sums up income and expens fields"
@@ -64,7 +63,6 @@
 (defn -main
 	"Parse Deutsche Bank transactions in CSV format and aggregates incomes and expenses by month"
 	[& args]
-
 	(with-open [file-reader (io/reader (first args))]
 		(-> file-reader
 			line-seq

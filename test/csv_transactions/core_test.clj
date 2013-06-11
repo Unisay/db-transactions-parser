@@ -41,6 +41,8 @@
 (facts "about `aggregate-by-month`"
 	(aggregate-by-month [ { :month [2013 3] :income 2 :expense 5 }
 											  { :month [2013 3] :income 3 :expense 6 }
-											  { :month [2013 4] :income 4 :expense 7 } ]) =>
+											  { :month [2013 4] :income 4 :expense 7 }
+											  { :month [2014 4] :income 5 :expense 8 } ]) =>
 	[ { :month [2013 3] :income 5 :expense 11 }
-	  { :month [2013 4] :income 4 :expense 7  } ])
+	  { :month [2013 4] :income 4 :expense 7  }
+	  { :month [2014 4] :income 5 :expense 8  } ])
