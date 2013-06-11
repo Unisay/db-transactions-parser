@@ -11,7 +11,7 @@
 	(:gen-class ))
 
 (def csv-formatter (format/formatter "MM/dd/yyyy"))
-(def month-formatter (format/formatter "MMM.yyyy"))
+(def month-formatter (format/formatter "MMM yyyy"))
 
 (defn- strip-header-footer
 	"Removes header and footer rows from CSV sequence of lines"
@@ -57,11 +57,22 @@
 	(for [[month group] (group-by #(datetime-to-year-month (:date %)) records)]
 		(assoc (reduce (partial group-records +) {} group) :month month)))
 
+(defn- format-number [num]
+	(format "%8.0f" (double num)))
+
+(defn- format-month [year-month]
+	(format/unparse month-formatter (.toDateTimeAtCurrentTime (.toLocalDate year-month 1))))
+
 (defn- print-values
 	"Outputs all results to console"
 	[records]
+	(println "Month     Expense   Income" )
+	(println "--------------------------")
 	(doseq [r records]
-		(println (:month r) (:expense r) (:income r))))
+		(println
+			(format-month  (:month r))
+			(format-number (:expense r))
+			(format-number (:income r)))))
 
 (defn -main
 	"Parse Deutsche Bank transactions in CSV format and aggregates incomes and expenses by month"
