@@ -52,9 +52,8 @@
 (defn- aggregate-by-month
 	"Groups row maps by month, sums up income and expens fields"
 	[records]
-	(let [groups (group-by #(get % :month) records)]
-		(for [[month group] groups]
-			(assoc (reduce (partial group-records +) {} group) :month month))))
+	(for [[month group] (group-by :month records)]
+		(assoc (reduce (partial group-records +) {} group) :month month)))
 
 (defn- print-values
 	"Outputs all results to console"
