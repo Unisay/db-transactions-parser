@@ -8,6 +8,7 @@
 		[clojure-csv/clojure-csv "2.0.0-alpha1"]
 		[clj-time "0.5.1"]
 		[org.clojure/clojure-contrib "1.2.0"]
+		[org.clojure/tools.cli "0.2.2"]
   ]
 	:profiles {:dev {:dependencies [[midje "1.5.0"]]}}
 	:main csv-transactions.core

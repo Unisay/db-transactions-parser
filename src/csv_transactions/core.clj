@@ -6,7 +6,8 @@
 	          [clj-time.format :as format]
 	          [clojure.contrib.math :as math])
 
-	(:use [clojure.string :only [split]])
+	(:use [clojure.string :only [split]]
+	      [clojure.tools.cli :only [cli]])
 
 	(:gen-class ))
 
@@ -78,10 +79,17 @@
 (defn -main
 	"Parse Deutsche Bank transactions in CSV format and aggregates incomes and expenses by month"
 	[& args]
-	(with-open [file-reader (io/reader (first args))]
-		(-> file-reader
-			line-seq
-			strip-header-footer
-			parse-csv-rows
-			aggregate-by-month
-			print-values)))
+
+	(let [[opts params banner] (cli args
+		                           ["-f" "--file" "Path to the CSV file with transactions"])]
+		(when (not (:file opts))
+			(println banner)
+			(System/exit 0))
+
+		(with-open [file-reader (io/reader (:file opts))]
+			(-> file-reader
+				line-seq
+				strip-header-footer
+				parse-csv-rows
+				aggregate-by-month
+				print-values))))
