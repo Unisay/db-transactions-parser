@@ -58,6 +58,11 @@
 	(for [[month group] (group-by #(datetime-to-year-month (:date %)) records)]
 		(assoc (reduce (partial group-records +) {} group) :month month)))
 
+(defn- count-diffs
+	"Adds field :diff with difference between :income and :expense"
+	[records]
+	(map #(assoc % :diff (- (:income %) (:expense %))) records))
+
 (defn- format-number [num]
 	(format "%8.0f" (double num)))
 
@@ -67,14 +72,15 @@
 (defn- print-values
 	"Outputs all results to console"
 	[records]
-	(println "--------------------------")
-	(println "Month     Expense   Income" )
-	(println "--------------------------")
+	(println "-----------------------------------")
+	(println "Month     Expense   Income     Diff" )
+	(println "-----------------------------------")
 	(doseq [r records]
 		(println
 			(format-month  (:month r))
 			(format-number (:expense r))
-			(format-number (:income r)))))
+			(format-number (:income r))
+			(format-number (:diff r)))))
 
 (defn -main
 	"Parse Deutsche Bank transactions in CSV format and aggregates incomes and expenses by month"
@@ -92,4 +98,5 @@
 				strip-header-footer
 				parse-csv-rows
 				aggregate-by-month
+        count-diffs
 				print-values))))
